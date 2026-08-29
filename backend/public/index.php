@@ -22,6 +22,9 @@ use App\Core\Response;
 use App\Core\Router;
 use Config\Database;
 use App\Controllers\AuthController;
+use App\Controllers\InstrumentoController;
+use App\Controllers\AmplificadorController;
+use App\Controllers\PedalEfeitoController;
 use App\Middlewares\AuthMiddleware;
 
 // 3. Carregamento das Variáveis de Ambiente (.env)
@@ -37,7 +40,7 @@ try {
     $router  = new Router();
 
     // -------------------------------------------------------------
-    // ROTA DE TESTE E SAÚDE DA API (Health Check)
+    // ROTA DE SAÚDE DA API (Health Check)
     // -------------------------------------------------------------
     $router->get('/api/status', function(Request $req) {
         $db = new Database();
@@ -58,11 +61,37 @@ try {
     $router->post('/api/auth/login',    [AuthController::class, 'login']);
     $router->get('/api/auth/me',        [AuthController::class, 'me'], [AuthMiddleware::class]);
 
+    // -------------------------------------------------------------
+    // CRUD DE INSTRUMENTOS (Rotas Protegidas)
+    // -------------------------------------------------------------
+    $router->get('/api/instrumentos',         [InstrumentoController::class, 'index'],   [AuthMiddleware::class]);
+    $router->get('/api/instrumentos/{id}',    [InstrumentoController::class, 'show'],    [AuthMiddleware::class]);
+    $router->post('/api/instrumentos',        [InstrumentoController::class, 'store'],   [AuthMiddleware::class]);
+    $router->put('/api/instrumentos/{id}',     [InstrumentoController::class, 'update'],  [AuthMiddleware::class]);
+    $router->delete('/api/instrumentos/{id}',  [InstrumentoController::class, 'destroy'], [AuthMiddleware::class]);
+
+    // -------------------------------------------------------------
+    // CRUD DE AMPLIFICADORES (Rotas Protegidas)
+    // -------------------------------------------------------------
+    $router->get('/api/amplificadores',        [AmplificadorController::class, 'index'],   [AuthMiddleware::class]);
+    $router->get('/api/amplificadores/{id}',   [AmplificadorController::class, 'show'],    [AuthMiddleware::class]);
+    $router->post('/api/amplificadores',       [AmplificadorController::class, 'store'],   [AuthMiddleware::class]);
+    $router->put('/api/amplificadores/{id}',    [AmplificadorController::class, 'update'],  [AuthMiddleware::class]);
+    $router->delete('/api/amplificadores/{id}', [AmplificadorController::class, 'destroy'], [AuthMiddleware::class]);
+
+    // -------------------------------------------------------------
+    // CRUD DE PEDAIS E EFEITOS (Rotas Protegidas)
+    // -------------------------------------------------------------
+    $router->get('/api/pedais',                [PedalEfeitoController::class, 'index'],   [AuthMiddleware::class]);
+    $router->get('/api/pedais/{id}',           [PedalEfeitoController::class, 'show'],    [AuthMiddleware::class]);
+    $router->post('/api/pedais',               [PedalEfeitoController::class, 'store'],   [AuthMiddleware::class]);
+    $router->put('/api/pedais/{id}',           [PedalEfeitoController::class, 'update'],  [AuthMiddleware::class]);
+    $router->delete('/api/pedais/{id}',        [PedalEfeitoController::class, 'destroy'], [AuthMiddleware::class]);
+
     // 5. Despacha a requisição para a rota correspondente
     $router->dispatch($request);
 
 } catch (\Throwable $e) {
-    // Tratamento global de exceções não capturadas
     Response::error(
         'Erro interno no servidor: ' . $e->getMessage(),
         500
