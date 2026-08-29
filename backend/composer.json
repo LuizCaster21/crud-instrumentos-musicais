@@ -13,7 +13,7 @@
         }
     },
     "scripts": {
-        "test": "php tests/test_runner.php",
+        "test": "php tests/test_runner.php && php tests/test_api_crud.php",
         "migrate": "php migrate.php"
     }
 }
