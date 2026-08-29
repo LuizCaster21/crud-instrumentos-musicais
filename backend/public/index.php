@@ -21,6 +21,8 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Router;
 use Config\Database;
+use App\Controllers\AuthController;
+use App\Middlewares\AuthMiddleware;
 
 // 3. Carregamento das Variáveis de Ambiente (.env)
 $envPath = dirname(__DIR__);
@@ -48,6 +50,13 @@ try {
             'server_time' => date('Y-m-d H:i:s')
         ], 'API operando normalmente');
     });
+
+    // -------------------------------------------------------------
+    // ROTAS DE AUTENTICAÇÃO
+    // -------------------------------------------------------------
+    $router->post('/api/auth/register', [AuthController::class, 'register']);
+    $router->post('/api/auth/login',    [AuthController::class, 'login']);
+    $router->get('/api/auth/me',        [AuthController::class, 'me'], [AuthMiddleware::class]);
 
     // 5. Despacha a requisição para a rota correspondente
     $router->dispatch($request);
