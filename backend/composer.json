@@ -1,13 +1,19 @@
 {
     "name": "luizf/backend",
+    "description": "API REST para gerenciamento de instrumentos musicais",
+    "type": "project",
     "require": {
         "firebase/php-jwt": "^7.1",
         "vlucas/phpdotenv": "^5.7"
     },
     "autoload": {
         "psr-4": {
-            "Config\\": "config/",
-            "Src\\": "src/"
+            "App\\": "src/",
+            "Config\\": "config/"
         }
+    },
+    "scripts": {
+        "test": "php tests/test_runner.php",
+        "migrate": "php migrate.php"
     }
 }
